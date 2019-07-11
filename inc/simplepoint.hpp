@@ -1,0 +1,18 @@
+#ifndef SIMPLE_POINT_
+#define SIMPLE_POINT_
+#include <cmath>
+
+struct SimplePoint {
+  double x, y;
+	double linear;
+	size_t original_index;
+  SimplePoint(double x = 0, double y = 0) : x(x), y(y), linear(0) {};
+
+  static double norm(const SimplePoint &p1, const SimplePoint &p2, double dz = 0.0) {
+    double dx = p1.x - p2.x;
+    double dy = p1.y - p2.y;
+    return std::sqrt(dx * dx + dy * dy + dz*dz);
+  }
+};
+
+#endif // SIMPLE_POINT_
