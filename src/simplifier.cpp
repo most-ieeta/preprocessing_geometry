@@ -317,11 +317,13 @@ void Simplifier::douglas_peucker_until_n(Polygon& poly, const float& red_percent
 	while (red_number > 0) {
 		size_t to_remove = 0;
 		//Starts with point 0 as to-remove point
-		float min_dist = SimplePoint::get_closest_point(poly.points[0], poly.points[1], poly.points[poly.points.size() - 1]);
+		SimplePoint p = SimplePoint::get_closest_point(poly.points[0], poly.points[1], poly.points[poly.points.size() - 1]);
+		float min_dist = SimplePoint::norm(poly.points[0], p);
 
 		//Checks points 1 to n-1
 		for (size_t i = 1; i < poly.points.size() - 1; ++i) {
-			float cur_dist = SimplePoint::get_closest_point(poly.points[i], poly.points[i-1], poly.points[i+1]);
+			p = SimplePoint::get_closest_point(poly.points[i], poly.points[i-1], poly.points[i+1]);
+			float cur_dist = SimplePoint::norm(poly.points[i], p);
 			if (cur_dist < min_dist) {
 				to_remove = i;
 				min_dist = cur_dist;
@@ -329,7 +331,8 @@ void Simplifier::douglas_peucker_until_n(Polygon& poly, const float& red_percent
 		}
 
 		//Checks point n
-		float cur_dist = SimplePoint::get_closest_point(poly.points[poly.points.size() - 1], poly.points[poly.points.size() - 2], poly.points[0]); 
+		p = SimplePoint::get_closest_point(poly.points[poly.points.size() - 1], poly.points[poly.points.size() - 2], poly.points[0]); 
+		float cur_dist = SimplePoint::norm(poly.points[poly.points.size() -1], p);
 		if (cur_dist < min_dist) {
 			to_remove = poly.points.size() - 1;
 			min_dist = cur_dist;
