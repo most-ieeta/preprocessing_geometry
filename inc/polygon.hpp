@@ -21,12 +21,12 @@ class Polygon {
 
         void save(std::ostream& output_file, FileType ftype = FileType::FILE_POF) const;
 
-
         //Static methods
         static double hausdorff(const Polygon& pol1, const Polygon& pol2);
         static double chamfer(const Polygon& pol1, const Polygon& pol2);
         static double polis(const Polygon& pol1, const Polygon& pol2);
 				static double jaccard(const Polygon& pol1, const Polygon& pol2);
+
 			private:
 				GEOSGeom get_GEOSGeom(GEOSContextHandle_t geos) const;
 				void print(GEOSContextHandle_t geos, char* prefix = nullptr);

@@ -311,6 +311,36 @@ double get_cost_with_corresp(const size_t& i_pt, const std::vector<Polygon>& pol
 	return ret;
 }
 
+void Simplifier::douglas_peucker_until_n(Polygon& poly, const float& red_percentage) {
+	size_t red_number = poly.points.size() * red_percentage;
+
+	while (red_number > 0) {
+		size_t to_remove = 0;
+		//Starts with point 0 as to-remove point
+		float min_dist = SimplePoint::get_closest_point(poly.points[0], poly.points[1], poly.points[poly.points.size() - 1]);
+
+		//Checks points 1 to n-1
+		for (size_t i = 1; i < poly.points.size() - 1; ++i) {
+			float cur_dist = SimplePoint::get_closest_point(poly.points[i], poly.points[i-1], poly.points[i+1]);
+			if (cur_dist < min_dist) {
+				to_remove = i;
+				min_dist = cur_dist;
+			}
+		}
+
+		//Checks point n
+		float cur_dist = SimplePoint::get_closest_point(poly.points[poly.points.size() - 1], poly.points[poly.points.size() - 2], poly.points[0]); 
+		if (cur_dist < min_dist) {
+			to_remove = poly.points.size() - 1;
+			min_dist = cur_dist;
+		}
+
+		poly.points.erase(poly.points.begin() + to_remove);
+
+		red_number--;
+	}
+}
+
 
 void Simplifier::visvalingam_with_corr(std::vector<Polygon>& polys, float red_percentage, float area_preference) {
 	const double sigma_a = 20.0;
@@ -381,23 +411,23 @@ void Simplifier::visvalingam_with_corr(std::vector<Polygon>& polys, float red_pe
 			polys[i_pol].points.erase(polys[i_pol].points.begin() + to_remove);
 			red_number[i_pol]--;
 
-/*
-			for(size_t i = 0; i < correspondences.size(); ++i) {
-				//Removes all correspondences linked to removed point
-				if (i_pol == 0) {
-					while (correspondences[i].first == to_remove && i < correspondences.size())
-						correspondences.erase(correspondences.begin() + i);
-				} else if (i_pol == 1) {
-					while (correspondences[i].second == to_remove && i < correspondences.size())
-						correspondences.erase(correspondences.begin() + i);
-				}
+			/*
+				 for(size_t i = 0; i < correspondences.size(); ++i) {
+			//Removes all correspondences linked to removed point
+			if (i_pol == 0) {
+			while (correspondences[i].first == to_remove && i < correspondences.size())
+			correspondences.erase(correspondences.begin() + i);
+			} else if (i_pol == 1) {
+			while (correspondences[i].second == to_remove && i < correspondences.size())
+			correspondences.erase(correspondences.begin() + i);
+			}
 
-				
-				//For all correspondences after, subtract one
-				if (i_pol == 0 && correspondences[i].first > to_remove)
-					correspondences[i].first--;
-				if (i_pol == 1 && correspondences[i].second > to_remove)
-					correspondences[i].second--;
+
+			//For all correspondences after, subtract one
+			if (i_pol == 0 && correspondences[i].first > to_remove)
+			correspondences[i].first--;
+			if (i_pol == 1 && correspondences[i].second > to_remove)
+			correspondences[i].second--;
 			}*/
 		}
 		max--;
