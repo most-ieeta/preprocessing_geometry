@@ -216,7 +216,8 @@ int main(int argc, char* argv[]) {
 
 		Polygon p(in, ft);
 
-		Simplifier::visvalingam_until_n(p, red);
+		//Simplifier::visvalingam_until_n(p, red);
+		Simplifier::douglas_peucker_until_n(p, red);
 
 		std::ofstream out_file("simp_"+std::string(argv[2]));
 		p.save(out_file, ft);

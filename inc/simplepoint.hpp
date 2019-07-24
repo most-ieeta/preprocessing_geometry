@@ -19,7 +19,7 @@ struct SimplePoint {
 		if (p1.x != p2.x) { // Not a vertical line
 			a = (p1.y - p2.y) / (p1.x - p2.x);
 			b = -1;
-			c = p1.y - a * p2.x; // General line equation ax + by + c = 0
+			c = p1.y - a * p1.x; // General line equation ax + by + c = 0
 		} else {               // Vertical line
 			a = 1;
 			b = 0;

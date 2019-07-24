@@ -338,6 +338,11 @@ void Simplifier::douglas_peucker_until_n(Polygon& poly, const float& red_percent
 			min_dist = cur_dist;
 		}
 
+		std::cout << "simplifier.cpp: To remove: " << to_remove << "\n";
+		std::cout << "  Coords: " << poly.points[to_remove].x << " " << poly.points[to_remove].y << "\n";
+		std::cout << "  Distance: " << min_dist << "\n";
+
+
 		poly.points.erase(poly.points.begin() + to_remove);
 
 		red_number--;
