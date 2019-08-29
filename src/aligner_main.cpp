@@ -1,12 +1,13 @@
 #include <iostream>
 #include <fstream>
+#include <istream>
 #include "polygon.hpp"
 #include "aligner.hpp"
 
 int main(int, char* argv[]) {
-	std::ifstream if1(argv[1]);
+	std::ifstream if1(argv[2]);
 	Polygon p1(if1);
-	std::ifstream if2(argv[2]);
+	std::ifstream if2(argv[1]);
 	Polygon p2(if2);
 
 	Aligner::translate_centroids(p1, p2);
