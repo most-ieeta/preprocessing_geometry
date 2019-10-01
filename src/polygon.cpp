@@ -360,3 +360,22 @@ double Polygon::polis(const Polygon &pol1, const Polygon &pol2) {
 	return (d_12 + d_21) / 2;
 }
 
+LinearSegment Polygon::extract_linear_segment(size_t start, size_t end) {
+	LinearSegment s;
+
+	if (start == end) return s;
+
+	if (start < end) {
+		for (size_t i = start; i < end; ++i) {
+			s.points.push_back(points[i]);
+		}
+	} else {
+		for (size_t i = start; i < points.size(); ++i) {
+			s.points.push_back(points[i]);
+		}
+		for (size_t i = 0; i < end; ++i) {
+			s.points.push_back(points[i]);
+		}
+	}
+	return s;
+}

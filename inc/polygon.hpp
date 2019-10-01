@@ -5,6 +5,7 @@
 #include <iostream>
 #include <geos_c.h>
 #include "simplepoint.hpp"
+#include "linearsegment.hpp"
 
 class Polygon {
     public:
@@ -20,6 +21,8 @@ class Polygon {
         
 
         void save(std::ostream& output_file, FileType ftype = FileType::FILE_POF) const;
+
+				LinearSegment extract_linear_segment(size_t start, size_t end);
 
         //Static methods
         static double hausdorff(const Polygon& pol1, const Polygon& pol2);

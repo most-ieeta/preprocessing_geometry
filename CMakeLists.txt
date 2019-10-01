@@ -29,3 +29,6 @@ target_link_libraries(msimp ${GEOS_C})
 
 add_executable(aligner src/aligner_main.cpp src/polygon.cpp src/aligner.cpp)
 target_link_libraries(aligner ${GEOS_C})
+
+add_executable(vcp src/polygon.cpp src/linearsegment.cpp src/vcp_main.cpp)
+target_link_libraries(aligner ${GEOS_C})
