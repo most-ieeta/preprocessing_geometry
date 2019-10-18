@@ -15,6 +15,7 @@ int main(int, char **) {
     std::istringstream ss(cmd);
     std::string first_word;
     ss >> first_word;
+		std::cerr << "Proc " << cmd << std::endl;
     if (first_word == "quit") {
       return 0;
     } else if (first_word == "comp") {

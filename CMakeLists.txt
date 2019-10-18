@@ -4,11 +4,15 @@ project( MOST )
 find_library(GEOS_C geos_c)
 find_path(GEOS_INC geos_c.h)
 
+find_path(BOOST_DIR "boost")
+
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug)
 endif()
 
 include_directories("./inc")
+include_directories("./src/libicp")
+include_directories("${BOOST_DIR}")
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
@@ -27,5 +31,6 @@ target_link_libraries(pof2wkt ${GEOS_C})
 add_executable(msimp src/multi_simplifier.cpp src/polygon.cpp src/simplifier.cpp)
 target_link_libraries(msimp ${GEOS_C})
 
-add_executable(aligner src/aligner_main.cpp src/polygon.cpp src/aligner.cpp)
+FILE(GLOB LIBICP "./src/libicp/*.cpp")
+add_executable(aligner src/aligner_main.cpp src/polygon.cpp ${LIBICP})
 target_link_libraries(aligner ${GEOS_C})
