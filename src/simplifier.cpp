@@ -277,6 +277,87 @@ void Simplifier::visvalingam_until_n(Polygon& poly, const float& red_percentage)
 	}
 }
 
+void Simplifier::douglas_with_time(std::vector<Polygon>& polys, float red_percentage, float time_value) {
+	//Not enough polygons
+	if (polys.size() < 2) return;
+	std::vector<size_t> red_number;
+
+	//Decides how many points to remove from each polygon
+	for (size_t i = 0; i < polys.size(); ++i) {
+		red_number.push_back(polys[i].points.size()*red_percentage);
+	}
+
+	bool cont=true;
+	while (cont) {
+		//Removes 1 point from any needed polygon
+		size_t max = 0;
+		for (auto s: red_number)
+			if (s > max)
+				max = s;
+
+		std::cout << "Reduced another point. Current max points: " << max << std::endl;
+
+		for (size_t i_pol = 0; i_pol < polys.size(); ++i_pol) {
+			if (red_number[i_pol] == 0) continue; //If removed all needed points, move on
+
+			//Minimum cost of points, and point associated with this cost
+			double min_cost=std::numeric_limits<double>::max();
+			size_t to_remove=0;
+
+			//Calculates the cost for all points
+			for (size_t i_pt = 0; i_pt < polys[i_pol].points.size(); ++i_pt) {
+				//Cost to remove from previous shape
+				double cost_previous = 0.0;
+				if (i_pol > 0) {
+					cost_previous = get_cost(i_pt, polys[i_pol], polys[i_pol-1]);
+				}
+
+				//Cost to remove from next shape
+				double cost_next = 0.0;
+				if (i_pol < (polys.size()-1)) {
+					cost_next = get_cost(i_pt, polys[i_pol], polys[i_pol+1]);
+				}
+
+				//Checks if current point is the cheapest to remove
+				double cost_time = (cost_previous > cost_next? cost_previous : cost_next);
+				//double cost_triangle = get_triangle(i_pt, polys[i_pol]);
+				size_t prev_index, next_index;
+				if (i_pt == 0) {
+					prev_index = polys[i_pol].points.size()-1;
+					next_index = 1;
+				} else if (i_pt == polys[i_pol].points.size()-1) {
+					prev_index = i_pt - 1;
+					next_index = 0;
+				} else {
+					prev_index = i_pt - 1;
+					next_index = i_pt + 1;
+				}
+				SimplePoint closest = SimplePoint::get_closest_point(polys[i_pol].points[i_pt], polys[i_pol].points[prev_index], polys[i_pol].points[next_index]);
+
+				double cost_distance = SimplePoint::norm(polys[i_pol].points[i_pt], closest);
+				double cost = (cost_time*time_value > cost_distance? cost_time*time_value : cost_distance);
+
+				if (cost < min_cost) {
+					to_remove = i_pt;
+					min_cost = cost;
+				}
+			}
+			//Removes the cheapest point
+			polys[i_pol].points.erase(polys[i_pol].points.begin() + to_remove);
+			red_number[i_pol]--;
+		}
+
+		//Loop condition - if there is still any points to remove
+		cont = false;
+		for (size_t i = 0; i < polys.size(); ++i) {
+			if (red_number[i] != 0) {
+				cont = true;
+				break;
+			}
+		}
+	}
+}
+
 std::vector<std::pair<size_t, size_t>> correspondences;
 double get_cost_with_corresp(const size_t& i_pt, const std::vector<Polygon>& polys, 
                              const size_t& i_pol, const size_t& i_pair) {

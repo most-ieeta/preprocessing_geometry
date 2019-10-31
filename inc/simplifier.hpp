@@ -8,6 +8,7 @@ namespace Simplifier {
 
 	void tetrahedral_until_n_points(std::vector<Polygon> polys, float red_percentage); 
 	void visvalingam_with_time(std::vector<Polygon>& polys, float red_percentage, float time_value);
+	void douglas_with_time(std::vector<Polygon>& polys, float red_percentage, float time_value);
 	
 	void visvalingam_until_n(Polygon& poly, const float& red_percentage);
 	void douglas_peucker_until_n(Polygon& poly, const float& red_percentage);
