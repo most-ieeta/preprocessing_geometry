@@ -63,11 +63,15 @@ Polygon::Polygon(std::istream &input_file, FileType ftype) {
 	}
 	perim += SimplePoint::norm(points[0], points[points.size()-1]);
 
+	perimeter = perim;
+
 	for (size_t i = 0; i < points.size(); ++i) {
 		if (i != 0)
 			accum += SimplePoint::norm(points[i], points[i-1]);
 		points[i].linear = accum/perim;
 	}
+
+	normalize_coords();
 }
 
 /** Saves to specific stream with format specified by FileType
@@ -360,3 +364,22 @@ double Polygon::polis(const Polygon &pol1, const Polygon &pol2) {
 	return (d_12 + d_21) / 2;
 }
 
+void Polygon::normalize_coords() {
+	double xmin, xmax, ymin, ymax;
+	xmin = xmax = points[0].x;
+	ymin = ymax = points[0].y;
+	//Finds extreme dimensions
+	for (SimplePoint p: points) {
+		if (p.x < xmin) xmin = p.x;
+		if (p.x > xmax) xmax = p.x;
+		if (p.y < ymin) ymin = p.y;
+		if (p.y > ymax) ymax = p.y;
+	}
+
+	for (size_t i = 0; i < points.size(); ++i) {
+		double x = (points[i].x - xmin) / (xmax - xmin);
+		double y = (points[i].y - ymin) / (ymax - ymin);
+		
+		normalized_vertices.emplace_back(x, y);
+	}
+}

@@ -9,6 +9,8 @@
 class Polygon {
     public:
         std::vector<SimplePoint> points;
+        std::vector<SimplePoint> normalized_vertices;
+				double perimeter;
 
         enum class FileType {
             FILE_POF,
@@ -20,6 +22,8 @@ class Polygon {
         
 
         void save(std::ostream& output_file, FileType ftype = FileType::FILE_POF) const;
+
+        void normalize_coords();
 
         //Static methods
         static double hausdorff(const Polygon& pol1, const Polygon& pol2);

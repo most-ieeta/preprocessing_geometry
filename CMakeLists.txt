@@ -29,3 +29,6 @@ target_link_libraries(msimp ${GEOS_C})
 
 add_executable(aligner src/aligner_main.cpp src/polygon.cpp src/aligner.cpp)
 target_link_libraries(aligner ${GEOS_C})
+
+add_executable(ga src/ga_main.cpp src/ga.cpp src/polygon.cpp src/ga_eval.cpp)
+target_link_libraries(ga ${GEOS_C})
