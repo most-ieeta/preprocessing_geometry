@@ -117,10 +117,6 @@ double eval(Polygon, Polygon, std::vector<matching>) {
 }
 
 namespace WEx {
-	double get_Value(Polygon, Polygon, std::vector<matching>, double x = 2.0) {
-		return 0; //TODO 
-	}
-
 	double get_ISE(Polygon p1, Polygon p2, std::vector<matching> matches) {
 		double ise = 0.0;
 		std::vector<size_t> simp_1, simp_2;
@@ -131,11 +127,17 @@ namespace WEx {
 		ise += Polygon::ise(p1, simp_1);
 		ise += Polygon::ise(p2, simp_2);
 
-		return ise;
+		return ise/2; //Return average ISE of both polygons
 	}
 
-	double get_CR(Polygon, std::vector<matching>) {
-		return 0;
+	double get_CR(Polygon p1, Polygon p2, std::vector<matching> matches) {
+		double CR1 = matches.size() / p1.points.size();
+		double CR2 = matches.size() / p2.points.size();
+		return (CR1 + CR2)/2; //Average CR
+	}
+
+	double get_Value(Polygon p1, Polygon p2, std::vector<matching> matches, double x = 2.0) {
+		return get_ISE(p1, p2, matches) / std::pow(get_CR(p1, p2, matches), x);
 	}
 }
 
