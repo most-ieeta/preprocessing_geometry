@@ -30,7 +30,9 @@ class Polygon {
         static double chamfer(const Polygon& pol1, const Polygon& pol2);
         static double polis(const Polygon& pol1, const Polygon& pol2);
 				static double jaccard(const Polygon& pol1, const Polygon& pol2);
+        static double ise(const Polygon& pol1, const std::vector<size_t> indexes);
 
+        double distance_to_point(const SimplePoint& pt) const;
 			private:
 				GEOSGeom get_GEOSGeom(GEOSContextHandle_t geos) const;
 				void print(GEOSContextHandle_t geos, char* prefix = nullptr);

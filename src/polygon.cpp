@@ -364,6 +364,28 @@ double Polygon::polis(const Polygon &pol1, const Polygon &pol2) {
 	return (d_12 + d_21) / 2;
 }
 
+double Polygon::distance_to_point(const SimplePoint& pt) {
+	double min = SimplePoint::norm(pt, SimplePoint::get_closest_point(p, points[0], points[points.size()-1]));
+	for (size_t i = 1; i < points.size(); ++i) {
+		double dist = SimplePoint::norm(pt, SimplePoint::get_closest_point(p, points[i], points[i-1]));
+		if (dist < min) min = dist;
+	}
+	return min;
+}
+
+double Polygon::ise(const Polygon& pol1, const std::vector<size_t> indexes) {
+	Polygon simp;
+	double ise = 0.0;
+	for (size_t t: indexes) {
+		simp.points.push_back(pol1.points[t]);
+	}
+
+	for (SimplePoint pt: pol1.points) {
+		ise += simp.distance_to_point(pt);
+	}
+	return ise;
+}
+
 void Polygon::normalize_coords() {
 	double xmin, xmax, ymin, ymax;
 	xmin = xmax = points[0].x;
