@@ -88,7 +88,54 @@ namespace proximity_term {
 		return dist / (p1.normalized_vertices.size() * (p1.normalized_vertices.size() - 1) / 2);
 	}
 }
+
+namespace distance_term {
+	std::vector<std::vector<double>> point_distances;
+
+	void distance_initialize(Polygon p1, Polygon p2) {
+		//TODO initialize point term
+	}
+
+	std::vector<size_t> get_histogram(Polygon p, size_t point) {
+		return std::vector<size_t>(); //TODO return a polar histogram of point P with P at [0, 0] and centroid at [1, 1]
+		//A comparative study using contours and skeletons as shape representations for binary image matching
+	}
+
+	double histogram_distance(std::vector<size_t> hist1, std::vector<size_t> hist2) {
+		return 0; //TODO histogram distance
+		//https://stats.stackexchange.com/questions/7400/how-to-assess-the-similarity-of-two-histograms <- quadratic distance
+	}
+
+	double get_value(Polygon p1, Polygon p2, std::vector<matching> matches) {
+		return 0; //TODO
+	}
+}
+
 double eval(Polygon, Polygon, std::vector<matching>) {
 
 	return 0;
 }
+
+namespace WEx {
+	double get_Value(Polygon, Polygon, std::vector<matching>, double x = 2.0) {
+		return 0; //TODO 
+	}
+
+	double get_ISE(Polygon p1, Polygon p2, std::vector<matching> matches) {
+		double ise = 0.0;
+		std::vector<size_t> simp_1, simp_2;
+		for (matching m: matches) {
+			simp_1.push_back(m.first);
+			simp_2.push_back(m.second);
+		}
+		ise += Polygon::ise(p1, simp_1);
+		ise += Polygon::ise(p2, simp_2);
+
+		return ise;
+	}
+
+	double get_CR(Polygon, std::vector<matching>) {
+		return 0;
+	}
+}
+

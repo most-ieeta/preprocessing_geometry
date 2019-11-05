@@ -8,7 +8,7 @@ struct SimplePoint {
 	size_t original_index;
 	SimplePoint(double x = 0, double y = 0) : x(x), y(y), linear(0) {};
 
-	static double norm(const SimplePoint &p1, const SimplePoint &p2, double dz = 0.0) {
+	static double inline norm(const SimplePoint &p1, const SimplePoint &p2, double dz = 0.0) {
 		double dx = p1.x - p2.x;
 		double dy = p1.y - p2.y;
 		return std::sqrt(dx * dx + dy * dy + dz*dz);
@@ -30,6 +30,16 @@ struct SimplePoint {
 		ret.x = (b * (b * p.x - a * p.y) - a * c) / (a * a + b * b);
 
 		ret.y = (a * (-b * p.x + a * p.y) - b * c) / (a * a + b * b);
+
+		//Checks it the point lies on the line segment or on the line outside of the valid segment
+			if ((ret.x < p1.x && ret.x < p2.x) || (ret.x > p1.x && ret.x > p2.x)) {
+				//If point lies outside, closest point becomes return point.
+				if (norm(p, p1) < norm(p, p2)) {
+					ret = p1;
+				} else {
+					ret = p2;
+				}
+			}
 
 		return ret;
 	}
