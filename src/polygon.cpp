@@ -381,9 +381,9 @@ double Polygon::ise(const Polygon& pol1, const std::vector<size_t> indexes) {
 	}
 
 	for (SimplePoint pt: pol1.points) {
-		ise += simp.distance_to_point(pt);
+		ise += std::pow(simp.distance_to_point(pt), 2);
 	}
-	return ise;
+	return ise;//pol1.points.size();
 }
 
 void Polygon::normalize_coords() {

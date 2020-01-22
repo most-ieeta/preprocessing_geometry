@@ -120,7 +120,7 @@ double eval(Polygon, Polygon, std::vector<matching>) {
 }
 
 namespace WEx {
-	double get_ISE(Polygon p1, Polygon p2, std::vector<matching> matches) {
+	double get_ISE(const Polygon& p1, const Polygon& p2, const std::vector<matching>& matches) {
 		double ise = 0.0;
 		std::vector<size_t> simp_1, simp_2;
 		for (matching m: matches) {
@@ -133,20 +133,20 @@ namespace WEx {
 		return ise/2; //Return average ISE of both polygons
 	}
 
-	double get_CR(Polygon p1, Polygon p2, std::vector<matching> matches) {
-		double CR1 = matches.size() / static_cast<double>(p1.points.size());
-		double CR2 = matches.size() / static_cast<double>(p2.points.size());
+	double get_CR(const Polygon& p1, const Polygon& p2, const std::vector<matching>& matches) {
+		double CR1 = static_cast<double>(p1.points.size()) / matches.size();
+		double CR2 = static_cast<double>(p2.points.size()) / matches.size();
 		return (CR1 + CR2)/2; //Average CR
 	}
 
-	double get_Value(Polygon p1, Polygon p2, std::vector<matching> matches, double x = 2.0) {
+	double get_Value(const Polygon& p1, const Polygon& p2, std::vector<matching> matches, double x = 2.0) {
 		return get_ISE(p1, p2, matches) / std::pow(get_CR(p1, p2, matches), x);
 	}
 }
 
 namespace Segment_Dist {
-	const double magnitude_bin_size = 3, angle_bin_size = 12; //Doubles to avoid warning of divisionby0
-	size_t get_bin(SimplePoint begin, SimplePoint end, SimplePoint mid_point) {
+	const double magnitude_bin_size = 5, angle_bin_size = 18; //Doubles to avoid warning of divisionby0
+	size_t get_bin(const SimplePoint& begin, const SimplePoint& end, const SimplePoint& mid_point) {
 		double base_angle = atan2(end.y - begin.y, end.x - begin.x);
 		double base_magnitude = SimplePoint::norm(begin, end);
 
@@ -177,7 +177,7 @@ namespace Segment_Dist {
 		return magnitude_bin * magnitude_bin_size + angle_bin;
 	}
 
-	double get_histogram_diff(std::vector<unsigned int> h1, std::vector<unsigned int> h2) {
+	double get_histogram_diff(const std::vector<unsigned int>& h1, const std::vector<unsigned int>& h2) {
 		//TODO: Histogram different options
 		//https://stats.stackexchange.com/questions/7400/how-to-assess-the-similarity-of-two-histograms
 		//https://docs.opencv.org/2.4/doc/tutorials/imgproc/histograms/histogram_comparison/histogram_comparison.html
@@ -208,7 +208,7 @@ namespace Segment_Dist {
 		return statistic;
 	}
 
-	std::vector<unsigned int> get_histogram(Polygon p, size_t point_1, size_t point_2) {
+	std::vector<unsigned int> get_histogram(const Polygon& p, const size_t& point_1, const size_t& point_2) {
 		std::vector<unsigned int> histogram(magnitude_bin_size * angle_bin_size, 0);
 
 		if (point_1 < point_2) {
@@ -219,7 +219,7 @@ namespace Segment_Dist {
 			for (size_t i = point_1 + 1; i < p.points.size(); ++i) {
 				histogram[get_bin(p.points[point_1], p.points[point_2], p.points[i])]++;
 			}
-			for (size_t i = 0; i < point_2; ++i) {
+			for (size_t i = 0; i <= point_2; ++i) {
 				histogram[get_bin(p.points[point_1], p.points[point_2], p.points[i])]++;
 			}
 		}
@@ -227,7 +227,7 @@ namespace Segment_Dist {
 		return std::move(histogram);
 	}
 
-	double get_val(Polygon p1, Polygon p2, std::vector<matching> matches) {
+	double get_val(const Polygon& p1, const Polygon& p2, const std::vector<matching>& matches) {
 		double total_diff = 0;
 		for (size_t i = 1; i < matches.size(); ++i) {
 			std::vector<unsigned int> h1 = get_histogram(p1, matches[i-1].first, matches[i].first);

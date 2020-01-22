@@ -15,7 +15,8 @@ include_directories("./src/libicp")
 include_directories("${BOOST_DIR}")
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+message(${CMAKE_CXX_FLAGS})
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
@@ -35,5 +36,5 @@ FILE(GLOB LIBICP "./src/libicp/*.cpp")
 add_executable(aligner src/aligner_main.cpp src/polygon.cpp ${LIBICP})
 target_link_libraries(aligner ${GEOS_C})
 
-add_executable(ga src/ga_main.cpp src/ga.cpp src/polygon.cpp src/ga_eval.cpp)
+add_executable(ga src/ga_main.cpp src/ga.cpp src/polygon.cpp src/ga_eval.cpp src/grasp.cpp)
 target_link_libraries(ga ${GEOS_C})
